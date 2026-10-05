@@ -61,25 +61,32 @@
     <button onclick="addTask()">Add Task</button>
 
     <ul id="taskList"></ul>
+      <script>
+    function addTask() {
+        const input = document.getElementById("taskInput");
+        const task = input.value;
 
-    <script>
-        function addTask() {
-            const input = document.getElementById("taskInput");
-            const task = input.value;
-
-            if (task === "") {
-                alert("Please enter a task.");
-                return;
-            }
-
-            const listItem = document.createElement("li");
-            listItem.textContent = task;
-
-            document.getElementById("taskList").appendChild(listItem);
-
-            input.value = "";
+        if (task === "") {
+            alert("Please enter a task.");
+            return;
         }
-    </script>
 
+        const listItem = document.createElement("li");
+        listItem.textContent = task;
+
+        const deleteButton = document.createElement("button");
+        deleteButton.textContent = "Delete";
+
+        deleteButton.onclick = function() {
+            listItem.remove();
+        };
+
+        listItem.appendChild(deleteButton);
+
+        document.getElementById("taskList").appendChild(listItem);
+
+        input.value = "";
+    }
+</script>
 </body>
 </html>
