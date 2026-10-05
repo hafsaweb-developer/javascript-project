@@ -77,9 +77,9 @@
         const deleteButton = document.createElement("button");
         deleteButton.textContent = "Delete";
 
-        deleteButton.onclick = function() {
-            listItem.remove();
-        };
+      deleteButton.addEventListener("click", function() {
+    listItem.remove();
+});
 
         listItem.appendChild(deleteButton);
 
