@@ -76,48 +76,53 @@
     <button onclick="clearTasks()">Clear All</button>
 
     <script>
-        function addTask() {
-            const input = document.getElementById("taskInput");
-            const task = input.value;
+    function addTask() {
+        const input = document.getElementById("taskInput");
+        const task = input.value;
 
-            if (task === "") {
-                alert("Please enter a task.");
-                return;
+        if (task === "") {
+            alert("Please enter a task.");
+            return;
+        }
+
+        const listItem = document.createElement("li");
+
+        const taskText = document.createElement("span");
+        taskText.textContent = task;
+
+        const completeButton = document.createElement("button");
+        completeButton.textContent = "Complete";
+
+        completeButton.onclick = function() {
+            if (taskText.style.textDecoration === "line-through") {
+                taskText.style.textDecoration = "none";
+                taskText.style.opacity = "1";
+            } else {
+                taskText.style.textDecoration = "line-through";
+                taskText.style.opacity = "0.5";
             }
+        };
 
-            const listItem = document.createElement("li");
-            listItem.textContent = task;
+        const deleteButton = document.createElement("button");
+        deleteButton.textContent = "Delete";
 
-            listItem.onclick = function() {
-                if (listItem.style.textDecoration === "line-through") {
-                    listItem.style.textDecoration = "none";
-                    listItem.style.opacity = "1";
-                } else {
-                    listItem.style.textDecoration = "line-through";
-                    listItem.style.opacity = "0.5";
-                }
-            };
+        deleteButton.onclick = function() {
+            listItem.remove();
+        };
 
-            const deleteButton = document.createElement("button");
-            deleteButton.textContent = "Delete";
+        listItem.appendChild(taskText);
+        listItem.appendChild(completeButton);
+        listItem.appendChild(deleteButton);
 
-            deleteButton.onclick = function(event) {
-                event.stopPropagation();
-                listItem.remove();
-            };
+        document.getElementById("taskList").appendChild(listItem);
 
-            listItem.appendChild(deleteButton);
+        input.value = "";
+    }
 
-            document.getElementById("taskList").appendChild(listItem);
-
-            input.value = "";
-        }
-
-        function clearTasks() {
-            document.getElementById("taskList").innerHTML = "";
-        }
-    </script>
-
+    function clearTasks() {
+        document.getElementById("taskList").innerHTML = "";
+    }
+</script>
 </body>
 
 </html>
