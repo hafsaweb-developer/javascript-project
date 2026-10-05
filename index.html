@@ -76,12 +76,8 @@
         listItem.textContent = task;
 
         listItem.onclick = function() {
-            if (listItem.style.textDecoration === "line-through") {
-                listItem.style.textDecoration = "none";
-            } else {
-                listItem.style.textDecoration = "line-through";
-            }
-        };
+    listItem.classList.toggle("completed");
+};
 
         const deleteButton = document.createElement("button");
         deleteButton.textContent = "Delete";
