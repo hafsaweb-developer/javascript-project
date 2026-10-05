@@ -76,19 +76,18 @@
         listItem.textContent = task;
 
         listItem.onclick = function() {
-    listItem.classList.toggle("completed");
-};
+            listItem.classList.toggle("completed");
+        };
 
         const deleteButton = document.createElement("button");
         deleteButton.textContent = "Delete";
 
-        deleteButton.addEventListener("click", function(event) {
+        deleteButton.onclick = function(event) {
             event.stopPropagation();
             listItem.remove();
-        });
+        };
 
         listItem.appendChild(deleteButton);
-
         document.getElementById("taskList").appendChild(listItem);
 
         input.value = "";
@@ -96,7 +95,7 @@
 
     function clearTasks() {
         document.getElementById("taskList").innerHTML = "";
-}
-</script> 
+    }
+</script>
 </body>
 </html>
