@@ -70,14 +70,17 @@
             alert("Please enter a task.");
             return;
         }
+const listItem = document.createElement("li");
+listItem.textContent = task;
 
-        const listItem = document.createElement("li");
-        listItem.textContent = task;
-
+listItem.onclick = function() {
+    listItem.style.textDecoration = "line-through";
+};
         const deleteButton = document.createElement("button");
         deleteButton.textContent = "Delete";
 
-      deleteButton.addEventListener("click", function() {
+    deleteButton.addEventListener("click", function(event) {
+    event.stopPropagation();
     listItem.remove();
 });
 
