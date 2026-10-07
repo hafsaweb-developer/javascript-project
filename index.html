@@ -92,6 +92,7 @@
             completeButton.textContent = "Complete";
 
             completeButton.onclick = function() {
+
                 if (taskText.style.textDecoration === "line-through") {
                     taskText.style.textDecoration = "none";
                     taskText.style.opacity = "1";
@@ -107,7 +108,9 @@
             deleteButton.textContent = "Delete";
 
             deleteButton.onclick = function() {
+
                 listItem.remove();
+
                 saveTasks();
             };
 
@@ -147,7 +150,8 @@
 
         function loadTasks() {
 
-            const savedTasks = JSON.parse(localStorage.getItem("tasks")) || [];
+            const savedTasks =
+                JSON.parse(localStorage.getItem("tasks")) || [];
 
             savedTasks.forEach(function(task) {
 
@@ -181,7 +185,9 @@
                 deleteButton.textContent = "Delete";
 
                 deleteButton.onclick = function() {
+
                     listItem.remove();
+
                     saveTasks();
                 };
 
