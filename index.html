@@ -80,26 +80,38 @@
 
     <script>
 
-        function updateTaskCount() {
-            const tasks = document.querySelectorAll("#taskList li").length;
-            document.getElementById("taskCount").textContent = "Tasks: " + tasks;
-        }
-
-
         function addTask() {
 
             const input = document.getElementById("taskInput");
-            const task = input.value;
+            const task = input.value.trim();
 
             if (task === "") {
                 alert("Please enter a task.");
                 return;
             }
 
+            createTask(task, false);
+
+            input.value = "";
+
+            saveTasks();
+
+            updateTaskCount();
+        }
+
+
+        function createTask(task, completed) {
+
             const listItem = document.createElement("li");
 
             const taskText = document.createElement("span");
             taskText.textContent = task;
+
+            if (completed) {
+                taskText.style.textDecoration = "line-through";
+                taskText.style.opacity = "0.5";
+            }
+
 
             const completeButton = document.createElement("button");
             completeButton.textContent = "Complete";
@@ -107,9 +119,12 @@
             completeButton.onclick = function() {
 
                 if (taskText.style.textDecoration === "line-through") {
+
                     taskText.style.textDecoration = "none";
                     taskText.style.opacity = "1";
+
                 } else {
+
                     taskText.style.textDecoration = "line-through";
                     taskText.style.opacity = "0.5";
                 }
@@ -136,12 +151,6 @@
             listItem.appendChild(deleteButton);
 
             document.getElementById("taskList").appendChild(listItem);
-
-            input.value = "";
-
-            saveTasks();
-
-            updateTaskCount();
         }
 
 
@@ -151,14 +160,11 @@
 
             document.querySelectorAll("#taskList li").forEach(function(listItem) {
 
-                const taskText = listItem.querySelector("span").textContent;
-
-                const completed =
-                    listItem.querySelector("span").style.textDecoration === "line-through";
+                const taskText = listItem.querySelector("span");
 
                 tasks.push({
-                    text: taskText,
-                    completed: completed
+                    text: taskText.textContent,
+                    completed: taskText.style.textDecoration === "line-through"
                 });
 
             });
@@ -169,61 +175,23 @@
 
         function loadTasks() {
 
-            const savedTasks =
-                JSON.parse(localStorage.getItem("tasks")) || [];
+            const savedTasks = JSON.parse(localStorage.getItem("tasks")) || [];
 
             savedTasks.forEach(function(task) {
 
-                const listItem = document.createElement("li");
-
-                const taskText = document.createElement("span");
-                taskText.textContent = task.text;
-
-                if (task.completed) {
-                    taskText.style.textDecoration = "line-through";
-                    taskText.style.opacity = "0.5";
-                }
-
-
-                const completeButton = document.createElement("button");
-                completeButton.textContent = "Complete";
-
-                completeButton.onclick = function() {
-
-                    if (taskText.style.textDecoration === "line-through") {
-                        taskText.style.textDecoration = "none";
-                        taskText.style.opacity = "1";
-                    } else {
-                        taskText.style.textDecoration = "line-through";
-                        taskText.style.opacity = "0.5";
-                    }
-
-                    saveTasks();
-                };
-
-
-                const deleteButton = document.createElement("button");
-                deleteButton.textContent = "Delete";
-
-                deleteButton.onclick = function() {
-
-                    listItem.remove();
-
-                    saveTasks();
-
-                    updateTaskCount();
-                };
-
-
-                listItem.appendChild(taskText);
-                listItem.appendChild(completeButton);
-                listItem.appendChild(deleteButton);
-
-                document.getElementById("taskList").appendChild(listItem);
+                createTask(task.text, task.completed);
 
             });
 
             updateTaskCount();
+        }
+
+
+        function updateTaskCount() {
+
+            const count = document.querySelectorAll("#taskList li").length;
+
+            document.getElementById("taskCount").textContent = "Tasks: " + count;
         }
 
 
