@@ -56,6 +56,11 @@
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
+
+        #taskCount {
+            font-weight: bold;
+            color: #8b5e83;
+        }
     </style>
 </head>
 
@@ -68,15 +73,19 @@
     <button onclick="addTask()">Add Task</button>
 
     <ul id="taskList"></ul>
+
     <p id="taskCount">Tasks: 0</p>
 
     <button onclick="clearTasks()">Clear All</button>
 
     <script>
+
         function updateTaskCount() {
-    const tasks = document.querySelectorAll("#taskList li").length;
-    document.getElementById("taskCount").textContent = "Tasks: " + tasks;
-}
+            const tasks = document.querySelectorAll("#taskList li").length;
+            document.getElementById("taskCount").textContent = "Tasks: " + tasks;
+        }
+
+
         function addTask() {
 
             const input = document.getElementById("taskInput");
@@ -108,6 +117,7 @@
                 saveTasks();
             };
 
+
             const deleteButton = document.createElement("button");
             deleteButton.textContent = "Delete";
 
@@ -116,7 +126,10 @@
                 listItem.remove();
 
                 saveTasks();
+
+                updateTaskCount();
             };
+
 
             listItem.appendChild(taskText);
             listItem.appendChild(completeButton);
@@ -127,6 +140,8 @@
             input.value = "";
 
             saveTasks();
+
+            updateTaskCount();
         }
 
 
@@ -169,6 +184,7 @@
                     taskText.style.opacity = "0.5";
                 }
 
+
                 const completeButton = document.createElement("button");
                 completeButton.textContent = "Complete";
 
@@ -185,6 +201,7 @@
                     saveTasks();
                 };
 
+
                 const deleteButton = document.createElement("button");
                 deleteButton.textContent = "Delete";
 
@@ -193,7 +210,10 @@
                     listItem.remove();
 
                     saveTasks();
+
+                    updateTaskCount();
                 };
+
 
                 listItem.appendChild(taskText);
                 listItem.appendChild(completeButton);
@@ -202,6 +222,8 @@
                 document.getElementById("taskList").appendChild(listItem);
 
             });
+
+            updateTaskCount();
         }
 
 
@@ -210,6 +232,8 @@
             document.getElementById("taskList").innerHTML = "";
 
             localStorage.removeItem("tasks");
+
+            updateTaskCount();
         }
 
 
