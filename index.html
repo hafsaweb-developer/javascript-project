@@ -52,7 +52,7 @@
             background: white;
             margin: 10px auto;
             padding: 15px;
-            max-width: 350px;
+            max-width: 400px;
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
@@ -133,6 +133,25 @@
             };
 
 
+            const editButton = document.createElement("button");
+            editButton.textContent = "Edit";
+
+            editButton.onclick = function() {
+
+                const newTask = prompt(
+                    "Edit your task:",
+                    taskText.textContent
+                );
+
+                if (newTask !== null && newTask.trim() !== "") {
+
+                    taskText.textContent = newTask.trim();
+
+                    saveTasks();
+                }
+            };
+
+
             const deleteButton = document.createElement("button");
             deleteButton.textContent = "Delete";
 
@@ -148,6 +167,7 @@
 
             listItem.appendChild(taskText);
             listItem.appendChild(completeButton);
+            listItem.appendChild(editButton);
             listItem.appendChild(deleteButton);
 
             document.getElementById("taskList").appendChild(listItem);
@@ -175,7 +195,8 @@
 
         function loadTasks() {
 
-            const savedTasks = JSON.parse(localStorage.getItem("tasks")) || [];
+            const savedTasks =
+                JSON.parse(localStorage.getItem("tasks")) || [];
 
             savedTasks.forEach(function(task) {
 
@@ -189,9 +210,11 @@
 
         function updateTaskCount() {
 
-            const count = document.querySelectorAll("#taskList li").length;
+            const count =
+                document.querySelectorAll("#taskList li").length;
 
-            document.getElementById("taskCount").textContent = "Tasks: " + count;
+            document.getElementById("taskCount").textContent =
+                "Tasks: " + count;
         }
 
 
