@@ -73,7 +73,10 @@
     <button onclick="clearTasks()">Clear All</button>
 
     <script>
-
+        function updateTaskCount() {
+    const tasks = document.querySelectorAll("#taskList li").length;
+    document.getElementById("taskCount").textContent = "Tasks: " + tasks;
+}
         function addTask() {
 
             const input = document.getElementById("taskInput");
