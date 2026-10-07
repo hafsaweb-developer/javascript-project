@@ -26,6 +26,7 @@
             border: 1px solid #ccc;
             border-radius: 6px;
             font-size: 16px;
+            margin: 5px;
         }
 
         button {
@@ -52,9 +53,22 @@
             background: white;
             margin: 10px auto;
             padding: 15px;
-            max-width: 400px;
+            max-width: 450px;
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .task-text {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .task-date {
+            display: block;
+            color: #777;
+            margin-bottom: 8px;
+            font-size: 14px;
         }
 
         #taskCount {
@@ -69,7 +83,9 @@
     <h1>My To-Do List</h1>
 
     <input type="text" id="taskInput" placeholder="Enter a task">
-<input type="date" id="taskDate">
+
+    <input type="date" id="taskDate">
+
     <button onclick="addTask()">Add Task</button>
 
     <ul id="taskList"></ul>
@@ -85,14 +101,18 @@
             const input = document.getElementById("taskInput");
             const task = input.value.trim();
 
+            const dateInput = document.getElementById("taskDate");
+            const taskDate = dateInput.value;
+
             if (task === "") {
                 alert("Please enter a task.");
                 return;
             }
 
-            createTask(task, false);
+            createTask(task, taskDate, false);
 
             input.value = "";
+            dateInput.value = "";
 
             saveTasks();
 
@@ -100,16 +120,27 @@
         }
 
 
-        function createTask(task, completed) {
+        function createTask(task, taskDate, completed) {
 
             const listItem = document.createElement("li");
 
             const taskText = document.createElement("span");
+            taskText.className = "task-text";
             taskText.textContent = task;
 
             if (completed) {
                 taskText.style.textDecoration = "line-through";
                 taskText.style.opacity = "0.5";
+            }
+
+
+            const dateText = document.createElement("span");
+            dateText.className = "task-date";
+
+            if (taskDate !== "") {
+                dateText.textContent = "Due: " + taskDate;
+            } else {
+                dateText.textContent = "No date";
             }
 
 
@@ -166,6 +197,7 @@
 
 
             listItem.appendChild(taskText);
+            listItem.appendChild(dateText);
             listItem.appendChild(completeButton);
             listItem.appendChild(editButton);
             listItem.appendChild(deleteButton);
@@ -173,16 +205,25 @@
             document.getElementById("taskList").appendChild(listItem);
         }
 
+
         function saveTasks() {
 
             const tasks = [];
 
             document.querySelectorAll("#taskList li").forEach(function(listItem) {
 
-                const taskText = listItem.querySelector("span");
+                const taskText = listItem.querySelector(".task-text");
+                const dateText = listItem.querySelector(".task-date");
+
+                let taskDate = "";
+
+                if (dateText.textContent !== "No date") {
+                    taskDate = dateText.textContent.replace("Due: ", "");
+                }
 
                 tasks.push({
                     text: taskText.textContent,
+                    date: taskDate,
                     completed: taskText.style.textDecoration === "line-through"
                 });
 
@@ -199,7 +240,11 @@
 
             savedTasks.forEach(function(task) {
 
-                createTask(task.text, task.completed);
+                createTask(
+                    task.text,
+                    task.date || "",
+                    task.completed
+                );
 
             });
 
