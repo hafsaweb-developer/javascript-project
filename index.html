@@ -13,446 +13,718 @@
 
         body {
             font-family: Arial, sans-serif;
-            background: #f5f5f5;
-            color: #333;
-            text-align: center;
-            padding: 30px 15px;
+            background: #f3f4f6;
+            color: #222;
             margin: 0;
+            padding: 30px 15px;
             transition: background 0.3s, color 0.3s;
         }
 
-        h1 {
-            color: #8b5e83;
+        .container {
+            max-width: 850px;
+            margin: auto;
+            background: white;
+            padding: 25px;
+            border-radius: 14px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
 
-        input {
-            padding: 12px;
-            max-width: 100%;
+        h1 {
+            text-align: center;
+            margin-top: 0;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 20px;
+        }
+
+        input, select, button {
+            font: inherit;
+            padding: 11px;
+            border-radius: 7px;
             border: 1px solid #ccc;
-            border-radius: 6px;
-            font-size: 16px;
-            margin: 5px;
+        }
+
+        input, select {
+            max-width: 100%;
+        }
+
+        .add-area {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        #taskInput {
+            flex: 2 1 200px;
+            min-width: 0;
+        }
+
+        #taskDate, #taskPriority {
+            flex: 1 1 150px;
+            min-width: 0;
         }
 
         button {
-            padding: 10px 14px;
-            background: #8b5e83;
-            color: white;
             border: none;
-            border-radius: 6px;
             cursor: pointer;
-            margin: 4px;
+            background: #2563eb;
+            color: white;
+            transition: opacity 0.2s;
         }
 
         button:hover {
-            opacity: 0.8;
+            opacity: 0.85;
         }
 
-        ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        li {
-            background: white;
-            color: #333;
-            margin: 12px auto;
-            padding: 15px;
-            max-width: 550px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px #00000015;
-        }
-
-        .task-text {
-            display: block;
-            font-weight: bold;
-            overflow-wrap: anywhere;
-            margin-bottom: 8px;
-        }
-
-        .task-date {
-            display: block;
-            color: #777;
-            font-size: 14px;
-            margin-bottom: 8px;
-        }
-
-        .status {
-            display: inline-block;
-            padding: 5px 9px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: bold;
-            margin-bottom: 8px;
-        }
-
-        .today {
-            background: #dff5e5;
-            color: #176534;
-        }
-
-        .upcoming {
-            background: #dceaff;
-            color: #2455a4;
-        }
-
-        .overdue {
-            background: #ffe1e1;
-            color: #a51d1d;
-        }
-
-        .no-date {
-            background: #eeeeee;
-            color: #555;
-        }
-
-        .completed {
-            background: #e5e5e5;
-            color: #444;
-        }
-
-        #taskCount {
-            font-weight: bold;
-            color: #8b5e83;
+        .theme-button {
+            background: #374151;
         }
 
         .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
             margin: 20px 0;
         }
 
-        .filter-button.active {
-            background: #4d3150;
-            outline: 2px solid #c99bc0;
+        .filter-button {
+            background: #e5e7eb;
+            color: #222;
         }
+
+        .filter-button.active {
+            background: #2563eb;
+            color: white;
+        }
+
+        #taskList {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .task-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            padding: 15px;
+            margin-bottom: 12px;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            overflow-wrap: anywhere;
+        }
+
+        .task-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .task-name {
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .task-meta {
+            margin-top: 8px;
+            font-size: 13px;
+            color: #6b7280;
+        }
+
+        .completed .task-name {
+            text-decoration: line-through;
+            opacity: 0.6;
+        }
+
+        .priority {
+            display: inline-block;
+            margin-top: 8px;
+            padding: 5px 8px;
+            border-radius: 5px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .priority-High {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .priority-Medium {
+            background: #ffedd5;
+            color: #9a3412;
+        }
+
+        .priority-Low {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .task-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .task-actions button {
+            padding: 8px;
+            font-size: 12px;
+        }
+
+        .complete-button {
+            background: #16a34a;
+        }
+
+        .edit-button {
+            background: #d97706;
+        }
+
+        .delete-button, .clear-button {
+            background: #dc2626;
+        }
+
+        .summary {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .empty-message {
+            text-align: center;
+            color: #6b7280;
+            padding: 20px 5px;
+        }
+
+        /* DARK MODE */
 
         body.dark-mode {
-            background: #1e1e2f;
-            color: #f5f5f5;
+            background: #111827;
+            color: #f9fafb;
         }
 
-        body.dark-mode h1,
-        body.dark-mode #taskCount {
-            color: #e6a8d7;
+        body.dark-mode .container {
+            background: #1f2937;
         }
 
-        body.dark-mode li {
-            background: #303047;
-            color: #f5f5f5;
-        }
-
-        body.dark-mode .task-date {
-            color: #d0c5d5;
-        }
-
-        body.dark-mode input {
-            background: #303047;
+        body.dark-mode input,
+        body.dark-mode select {
+            background: #374151;
             color: white;
-            border-color: #666;
+            border-color: #4b5563;
         }
 
-        @media (max-width: 480px) {
-            input {
+        body.dark-mode .task-item {
+            border-color: #4b5563;
+        }
+
+        body.dark-mode .task-meta {
+            color: #d1d5db;
+        }
+
+        body.dark-mode .filter-button {
+            background: #374151;
+            color: white;
+        }
+
+        body.dark-mode .filter-button.active {
+            background: #2563eb;
+        }
+
+        body.dark-mode .empty-message {
+            color: #d1d5db;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 15px 8px;
+            }
+
+            .container {
+                padding: 16px;
+            }
+
+            .task-item {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .task-actions {
                 width: 100%;
-                max-width: 320px;
+            }
+
+            .task-actions button {
+                flex: 1;
             }
         }
     </style>
 </head>
 
 <body>
+
+<div class="container">
+
     <h1>My To-Do List</h1>
 
-    <button id="darkModeButton" onclick="toggleDarkMode()">
-        🌙 Dark Mode
-    </button>
+    <div class="top-bar">
+        <button class="theme-button" id="themeButton"
+                onclick="toggleDarkMode()">
+            🌙 Dark Mode
+        </button>
+    </div>
 
-    <p>
-        <input type="text" id="taskInput" placeholder="Enter a task">
-        <input type="date" id="taskDate">
+    <!-- ADD TASK AREA -->
+
+    <div class="add-area">
+        <input
+            type="text"
+            id="taskInput"
+            placeholder="Enter a task"
+        >
+
+        <input
+            type="date"
+            id="taskDate"
+            aria-label="Task due date"
+        >
+
+        <select id="taskPriority" aria-label="Task priority">
+            <option value="High">🔴 High Priority</option>
+            <option value="Medium" selected>🟠 Medium Priority</option>
+            <option value="Low">🟢 Low Priority</option>
+        </select>
+
         <button onclick="addTask()">Add Task</button>
-    </p>
+    </div>
+
+    <!-- TASK FILTERS -->
 
     <div class="filters">
-       <button class="filter-button active" data-filter="all"
-  onclick="setFilter('all', this)">All Tasks</button>
+        <button class="filter-button active"
+                data-filter="all"
+                onclick="setFilter('all', this)">
+            All Tasks
+        </button>
 
-<button class="filter-button" data-filter="today"
-  onclick="setFilter('today', this)">Today</button>
+        <button class="filter-button"
+                data-filter="today"
+                onclick="setFilter('today', this)">
+            Today
+        </button>
 
-<button class="filter-button" data-filter="upcoming"
-  onclick="setFilter('upcoming', this)">Upcoming</button>
+        <button class="filter-button"
+                data-filter="upcoming"
+                onclick="setFilter('upcoming', this)">
+            Upcoming
+        </button>
 
-<button class="filter-button" data-filter="overdue"
-  onclick="setFilter('overdue', this)">Overdue</button>
+        <button class="filter-button"
+                data-filter="overdue"
+                onclick="setFilter('overdue', this)">
+            Overdue
+        </button>
 
-<button class="filter-button" data-filter="completed"
-  onclick="setFilter('completed', this)">Completed</button>
+        <button class="filter-button"
+                data-filter="completed"
+                onclick="setFilter('completed', this)">
+            Completed
+        </button>
     </div>
+
+    <!-- TASK LIST -->
 
     <ul id="taskList"></ul>
 
-    <p id="taskCount">Tasks: 0</p>
+    <div class="summary">
+        <strong id="taskCount">Tasks: 0</strong>
 
-    <button onclick="clearTasks()">Clear All</button>
+        <button class="clear-button" onclick="clearAllTasks()">
+            Clear All
+        </button>
+    </div>
 
-    <script>
-        let currentFilter = "all";
+</div>
 
-        function getToday() {
-            const now = new Date();
-            const year = now.getFullYear();
-            const month = String(now.getMonth() + 1).padStart(2, "0");
-            const day = String(now.getDate()).padStart(2, "0");
+<script>
+    // LOAD SAVED TASKS
 
-            return `${year}-${month}-${day}`;
+    let tasks = [];
+
+    try {
+        const savedTasks = JSON.parse(
+            localStorage.getItem("tasks") || "[]"
+        );
+
+        if (Array.isArray(savedTasks)) {
+            tasks = savedTasks.map((task, index) => ({
+                id: task.id ?? (Date.now() + index),
+                text: task.text ?? task.task ?? task.name ?? "",
+                date: task.date ?? task.dueDate ?? "",
+                completed: Boolean(
+                    task.completed ?? task.isCompleted ?? false
+                ),
+                priority: ["High", "Medium", "Low"].includes(task.priority)
+                    ? task.priority
+                    : "Medium"
+            }));
+        }
+    } catch (error) {
+        tasks = [];
+    }
+
+    let currentFilter = "all";
+
+
+    // SAVE TASKS
+
+    function saveTasks() {
+        localStorage.setItem("tasks", JSON.stringify(tasks));
+    }
+
+
+    // GET TODAY'S DATE IN LOCAL TIME
+
+    function getToday() {
+        const today = new Date();
+
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, "0");
+        const day = String(today.getDate()).padStart(2, "0");
+
+        return `${year}-${month}-${day}`;
+    }
+
+
+    // ADD TASK
+
+    function addTask() {
+        const taskInput = document.getElementById("taskInput");
+        const taskDate = document.getElementById("taskDate");
+        const taskPriority = document.getElementById("taskPriority");
+
+        const text = taskInput.value.trim();
+        const date = taskDate.value;
+        const priority = taskPriority.value;
+
+        if (text === "") {
+            alert("Please enter a task!");
+            taskInput.focus();
+            return;
         }
 
-        function addTask() {
-            const input = document.getElementById("taskInput");
-            const dateInput = document.getElementById("taskDate");
-            const task = input.value.trim();
+        tasks.push({
+            id: Date.now(),
+            text: text,
+            date: date,
+            priority: priority,
+            completed: false
+        });
 
-            if (task === "") {
-                alert("Please enter a task.");
-                return;
-            }
+        saveTasks();
 
-            createTask(task, dateInput.value, false);
+        taskInput.value = "";
+        taskDate.value = "";
+        taskPriority.value = "Medium";
 
-            input.value = "";
-            dateInput.value = "";
+        renderTasks();
+    }
 
-            saveTasks();
-            updateTaskCount();
-            applyFilter();
+
+    // COMPLETE OR UNCOMPLETE A TASK
+
+    function toggleComplete(id) {
+        const task = tasks.find(task => task.id === id);
+
+        if (!task) return;
+
+        task.completed = !task.completed;
+
+        saveTasks();
+        renderTasks();
+    }
+
+
+    // EDIT TASK
+
+    function editTask(id) {
+        const task = tasks.find(task => task.id === id);
+
+        if (!task) return;
+
+        const newText = prompt("Edit your task:", task.text);
+
+        if (newText === null) return;
+
+        if (newText.trim() === "") {
+            alert("Task cannot be empty!");
+            return;
         }
 
-        function createTask(task, taskDate, completed) {
-            const listItem = document.createElement("li");
-            listItem.dataset.date = taskDate || "";
-            listItem.dataset.completed = String(Boolean(completed));
+        const newDate = prompt(
+            "Enter a due date in YYYY-MM-DD format, or leave blank:",
+            task.date || ""
+        );
 
-            const taskText = document.createElement("span");
-            taskText.className = "task-text";
-            taskText.textContent = task;
+        if (newDate === null) return;
 
-            const dateText = document.createElement("span");
-            dateText.className = "task-date";
+        if (newDate.trim() !== "" &&
+            !/^\d{4}-\d{2}-\d{2}$/.test(newDate.trim())) {
+            alert("Please use the date format YYYY-MM-DD.");
+            return;
+        }
 
-            const status = document.createElement("span");
-            status.className = "status";
+        const newPriority = prompt(
+            "Choose priority: High, Medium, or Low",
+            task.priority
+        );
 
-            function updateStatus() {
-                const date = listItem.dataset.date;
-                const isCompleted = listItem.dataset.completed === "true";
+        if (newPriority === null) return;
 
-                status.className = "status";
+        const priority = newPriority.trim().toLowerCase();
 
-                if (isCompleted) {
-                    status.textContent = "Completed";
-                    status.classList.add("completed");
-                } else if (!date) {
-                    status.textContent = "No date";
-                    status.classList.add("no-date");
-                } else if (date === getToday()) {
-                    status.textContent = "Today";
-                    status.classList.add("today");
-                } else if (date < getToday()) {
-                    status.textContent = "Overdue";
-                    status.classList.add("overdue");
-                } else {
-                    status.textContent = "Upcoming";
-                    status.classList.add("upcoming");
-                }
+        const priorityMap = {
+            high: "High",
+            medium: "Medium",
+            low: "Low"
+        };
 
-                dateText.textContent = date ? "Due: " + date : "No date selected";
+        if (!priorityMap[priority]) {
+            alert("Please enter High, Medium, or Low.");
+            return;
+        }
+
+        task.text = newText.trim();
+        task.date = newDate.trim();
+        task.priority = priorityMap[priority];
+
+        saveTasks();
+        renderTasks();
+    }
+
+
+    // DELETE ONE TASK
+
+    function deleteTask(id) {
+        if (!confirm("Are you sure you want to delete this task?")) {
+            return;
+        }
+
+        tasks = tasks.filter(task => task.id !== id);
+
+        saveTasks();
+        renderTasks();
+    }
+
+
+    // CLEAR ALL TASKS
+
+    function clearAllTasks() {
+        if (tasks.length === 0) {
+            alert("There are no tasks to clear.");
+            return;
+        }
+
+        if (!confirm("Are you sure you want to delete all tasks?")) {
+            return;
+        }
+
+        tasks = [];
+
+        saveTasks();
+        renderTasks();
+    }
+
+
+    // FILTER TASKS
+
+    function setFilter(filter, button) {
+        currentFilter = filter;
+
+        document.querySelectorAll(".filter-button").forEach(btn => {
+            btn.classList.remove("active");
+        });
+
+        button.classList.add("active");
+
+        renderTasks();
+    }
+
+
+    // CHECK WHICH TASKS SHOULD BE DISPLAYED
+
+    function matchesFilter(task) {
+        const today = getToday();
+
+        if (currentFilter === "all") {
+            return true;
+        }
+
+        if (currentFilter === "completed") {
+            return task.completed;
+        }
+
+        if (task.completed) {
+            return false;
+        }
+
+        if (currentFilter === "today") {
+            return task.date === today;
+        }
+
+        if (currentFilter === "upcoming") {
+            return task.date !== "" && task.date > today;
+        }
+
+        if (currentFilter === "overdue") {
+            return task.date !== "" && task.date < today;
+        }
+
+        return true;
+    }
+
+
+    // DISPLAY TASKS
+
+    function renderTasks() {
+        const taskList = document.getElementById("taskList");
+        const taskCount = document.getElementById("taskCount");
+
+        taskList.innerHTML = "";
+
+        const visibleTasks = tasks.filter(matchesFilter);
+
+        if (visibleTasks.length === 0) {
+            const emptyMessage = document.createElement("li");
+            emptyMessage.className = "empty-message";
+            emptyMessage.textContent = "No tasks found.";
+            taskList.appendChild(emptyMessage);
+        }
+
+        visibleTasks.forEach(task => {
+            const li = document.createElement("li");
+
+            li.className = "task-item";
+
+            if (task.completed) {
+                li.classList.add("completed");
             }
 
-            updateStatus();
+            const info = document.createElement("div");
+            info.className = "task-info";
 
-            if (completed) {
-                taskText.style.textDecoration = "line-through";
-                taskText.style.opacity = "0.5";
-            }
+            const name = document.createElement("div");
+            name.className = "task-name";
+            name.textContent = task.text;
+
+            const meta = document.createElement("div");
+            meta.className = "task-meta";
+            meta.textContent = task.date
+                ? "Due: " + task.date
+                : "No due date";
+
+            const priority = document.createElement("span");
+            priority.className = "priority priority-" + task.priority;
+            priority.textContent = task.priority + " Priority";
+
+            info.appendChild(name);
+            info.appendChild(meta);
+            info.appendChild(priority);
+
+            const actions = document.createElement("div");
+            actions.className = "task-actions";
 
             const completeButton = document.createElement("button");
-            completeButton.textContent = completed ? "Undo" : "Complete";
-
-            completeButton.onclick = function() {
-                const isCompleted = listItem.dataset.completed === "true";
-                listItem.dataset.completed = String(!isCompleted);
-
-                taskText.style.textDecoration = !isCompleted
-                    ? "line-through" : "none";
-                taskText.style.opacity = !isCompleted ? "0.5" : "1";
-                completeButton.textContent = !isCompleted ? "Undo" : "Complete";
-
-                updateStatus();
-                saveTasks();
-                updateTaskCount();
-                applyFilter();
-            };
+            completeButton.className = "complete-button";
+            completeButton.textContent = task.completed
+                ? "Undo"
+                : "Complete";
+            completeButton.onclick = () => toggleComplete(task.id);
 
             const editButton = document.createElement("button");
+            editButton.className = "edit-button";
             editButton.textContent = "Edit";
-
-            editButton.onclick = function() {
-                const newTask = prompt("Edit your task:", taskText.textContent);
-
-                if (newTask !== null && newTask.trim() !== "") {
-                    taskText.textContent = newTask.trim();
-
-                    const newDate = prompt(
-                        "Enter a due date as YYYY-MM-DD, or leave blank for no date:",
-                        listItem.dataset.date
-                    );
-
-                    if (newDate !== null) {
-                        if (newDate === "" || /^\d{4}-\d{2}-\d{2}$/.test(newDate)) {
-                            listItem.dataset.date = newDate;
-                            updateStatus();
-                        } else {
-                            alert("Please use the date format YYYY-MM-DD.");
-                        }
-                    }
-
-                    saveTasks();
-                    applyFilter();
-                }
-            };
+            editButton.onclick = () => editTask(task.id);
 
             const deleteButton = document.createElement("button");
+            deleteButton.className = "delete-button";
             deleteButton.textContent = "Delete";
+            deleteButton.onclick = () => deleteTask(task.id);
 
-            deleteButton.onclick = function() {
-                listItem.remove();
-                saveTasks();
-                updateTaskCount();
-                applyFilter();
-            };
+            actions.appendChild(completeButton);
+            actions.appendChild(editButton);
+            actions.appendChild(deleteButton);
 
-            listItem.append(
-                taskText,
-                dateText,
-                document.createElement("br"),
-                status,
-                document.createElement("br"),
-                completeButton,
-                editButton,
-                deleteButton
-            );
+            li.appendChild(info);
+            li.appendChild(actions);
 
-            document.getElementById("taskList").appendChild(listItem);
+            taskList.appendChild(li);
+        });
+
+        taskCount.textContent =
+            "Tasks: " + tasks.length +
+            " | Completed: " +
+            tasks.filter(task => task.completed).length;
+    }
+
+
+    // DARK MODE
+
+    function toggleDarkMode() {
+        document.body.classList.toggle("dark-mode");
+
+        const isDark = document.body.classList.contains("dark-mode");
+
+        localStorage.setItem("darkMode", isDark ? "on" : "off");
+
+        updateThemeButton();
+    }
+
+
+    // UPDATE DARK MODE BUTTON TEXT
+
+    function updateThemeButton() {
+        const button = document.getElementById("themeButton");
+
+        if (document.body.classList.contains("dark-mode")) {
+            button.textContent = "☀️ Light Mode";
+        } else {
+            button.textContent = "🌙 Dark Mode";
         }
+    }
 
-        function saveTasks() {
-            const tasks = [];
 
-            document.querySelectorAll("#taskList li").forEach(function(item) {
-                tasks.push({
-                    text: item.querySelector(".task-text").textContent,
-                    date: item.dataset.date || "",
-                    completed: item.dataset.completed === "true"
-                });
-            });
+    // RESTORE DARK MODE
 
-            localStorage.setItem("tasks", JSON.stringify(tasks));
-        }
+    if (localStorage.getItem("darkMode") === "on") {
+        document.body.classList.add("dark-mode");
+    }
 
-        function loadTasks() {
-            let savedTasks = [];
+    updateThemeButton();
 
-            try {
-                savedTasks = JSON.parse(localStorage.getItem("tasks")) || [];
-            } catch (error) {
-                savedTasks = [];
-            }
 
-            savedTasks.forEach(function(task) {
-                createTask(task.text, task.date || "", task.completed);
-            });
+    // ALLOW ENTER KEY TO ADD TASK
 
-            updateTaskCount();
-            applyFilter();
-        }
-
-        function updateTaskCount() {
-            const tasks = Array.from(document.querySelectorAll("#taskList li"));
-            const activeTasks = tasks.filter(
-                task => task.dataset.completed !== "true"
-            ).length;
-
-            document.getElementById("taskCount").textContent =
-                `Tasks: ${tasks.length} | Remaining: ${activeTasks}`;
-        }
-
-        function setFilter(filter, button) {
-            currentFilter = filter;
-
-            document.querySelectorAll(".filter-button").forEach(function(item) {
-                item.classList.remove("active");
-            });
-
-            button.classList.add("active");
-            applyFilter();
-        }
-
-        function applyFilter() {
-            document.querySelectorAll("#taskList li").forEach(function(item) {
-                const date = item.dataset.date;
-                const completed = item.dataset.completed === "true";
-                let show = false;
-
-                if (currentFilter === "all") {
-                    show = true;
-                } else if (currentFilter === "completed") {
-                    show = completed;
-                } else if (currentFilter === "today") {
-                    show = !completed && date === getToday();
-                } else if (currentFilter === "upcoming") {
-                    show = !completed && date > getToday();
-                } else if (currentFilter === "overdue") {
-                    show = !completed && date !== "" && date < getToday();
-                }
-
-                item.style.display = show ? "" : "none";
-            });
-        }
-
-        function clearTasks() {
-            if (!confirm("Are you sure you want to delete all tasks?")) {
-                return;
-            }
-
-            document.getElementById("taskList").innerHTML = "";
-            localStorage.removeItem("tasks");
-
-            updateTaskCount();
-            applyFilter();
-        }
-
-        function toggleDarkMode() {
-            const isDark = document.body.classList.toggle("dark-mode");
-
-            document.getElementById("darkModeButton").textContent =
-                isDark ? "☀️ Light Mode" : "🌙 Dark Mode";
-
-            localStorage.setItem("darkMode", String(isDark));
-        }
-
-        function loadDarkMode() {
-            const isDark = localStorage.getItem("darkMode") === "true";
-
-            if (isDark) {
-                document.body.classList.add("dark-mode");
-                document.getElementById("darkModeButton").textContent =
-                    "☀️ Light Mode";
+    document.getElementById("taskInput").addEventListener(
+        "keydown",
+        function(event) {
+            if (event.key === "Enter") {
+                addTask();
             }
         }
+    );
 
-        loadDarkMode();
-        loadTasks();
-    </script>
+
+    // SHOW SAVED TASKS WHEN PAGE OPENS
+
+    renderTasks();
+</script>
+
 </body>
 </html>
 ```
