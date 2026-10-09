@@ -1,7 +1,6 @@
 ```html
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -24,7 +23,6 @@
 
         h1 {
             color: #8b5e83;
-            margin-bottom: 20px;
         }
 
         input {
@@ -37,13 +35,13 @@
         }
 
         button {
-            padding: 10px 15px;
+            padding: 10px 14px;
             background: #8b5e83;
             color: white;
             border: none;
             border-radius: 6px;
             cursor: pointer;
-            margin: 5px;
+            margin: 4px;
         }
 
         button:hover {
@@ -53,7 +51,6 @@
         ul {
             list-style: none;
             padding: 0;
-            margin-top: 25px;
         }
 
         li {
@@ -61,23 +58,57 @@
             color: #333;
             margin: 12px auto;
             padding: 15px;
-            max-width: 500px;
+            max-width: 550px;
             border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 5px #00000015;
         }
 
         .task-text {
             display: block;
             font-weight: bold;
-            margin-bottom: 8px;
             overflow-wrap: anywhere;
+            margin-bottom: 8px;
         }
 
         .task-date {
             display: block;
             color: #777;
-            margin-bottom: 8px;
             font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 5px 9px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .today {
+            background: #dff5e5;
+            color: #176534;
+        }
+
+        .upcoming {
+            background: #dceaff;
+            color: #2455a4;
+        }
+
+        .overdue {
+            background: #ffe1e1;
+            color: #a51d1d;
+        }
+
+        .no-date {
+            background: #eeeeee;
+            color: #555;
+        }
+
+        .completed {
+            background: #e5e5e5;
+            color: #444;
         }
 
         #taskCount {
@@ -85,28 +116,32 @@
             color: #8b5e83;
         }
 
-        /* Dark Mode */
+        .filters {
+            margin: 20px 0;
+        }
+
+        .filter-button.active {
+            background: #4d3150;
+            outline: 2px solid #c99bc0;
+        }
+
         body.dark-mode {
             background: #1e1e2f;
             color: #f5f5f5;
         }
 
-        body.dark-mode h1 {
+        body.dark-mode h1,
+        body.dark-mode #taskCount {
             color: #e6a8d7;
         }
 
         body.dark-mode li {
             background: #303047;
             color: #f5f5f5;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
         }
 
         body.dark-mode .task-date {
             color: #d0c5d5;
-        }
-
-        body.dark-mode #taskCount {
-            color: #e6a8d7;
         }
 
         body.dark-mode input {
@@ -120,29 +155,39 @@
                 width: 100%;
                 max-width: 320px;
             }
-
-            button {
-                padding: 10px 12px;
-            }
         }
     </style>
 </head>
 
 <body>
-
     <h1>My To-Do List</h1>
 
     <button id="darkModeButton" onclick="toggleDarkMode()">
         🌙 Dark Mode
     </button>
 
-    <br>
+    <p>
+        <input type="text" id="taskInput" placeholder="Enter a task">
+        <input type="date" id="taskDate">
+        <button onclick="addTask()">Add Task</button>
+    </p>
 
-    <input type="text" id="taskInput" placeholder="Enter a task">
+    <div class="filters">
+        <button class="filter-button active" data-filter="all"
+            onclick="setFilter('all', this)">All Tasks</button>
 
-    <input type="date" id="taskDate">
+        <button class="filter-button" data-filter="today"
+            onclick="setFilter('today', this)">Today</button>
 
-    <button onclick="addTask()">Add Task</button>
+        <button class="filter-button" data-filter="upcoming"
+            onclick="setFilter('upcoming', this)">Upcoming</button>
+
+        <button class="filter-button" data-filter="overdue"
+            onclick="setFilter('overdue', this)">Overdue</button>
+
+        <button class="filter-button" data-filter="completed"
+            onclick="setFilter('completed', this)">Completed</button>
+    </div>
 
     <ul id="taskList"></ul>
 
@@ -151,75 +196,128 @@
     <button onclick="clearTasks()">Clear All</button>
 
     <script>
+        let currentFilter = "all";
+
+        function getToday() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, "0");
+            const day = String(now.getDate()).padStart(2, "0");
+
+            return `${year}-${month}-${day}`;
+        }
+
         function addTask() {
             const input = document.getElementById("taskInput");
-            const task = input.value.trim();
-
             const dateInput = document.getElementById("taskDate");
-            const taskDate = dateInput.value;
+            const task = input.value.trim();
 
             if (task === "") {
                 alert("Please enter a task.");
                 return;
             }
 
-            createTask(task, taskDate, false);
+            createTask(task, dateInput.value, false);
 
             input.value = "";
             dateInput.value = "";
 
             saveTasks();
             updateTaskCount();
+            applyFilter();
         }
 
         function createTask(task, taskDate, completed) {
             const listItem = document.createElement("li");
+            listItem.dataset.date = taskDate || "";
+            listItem.dataset.completed = String(Boolean(completed));
 
             const taskText = document.createElement("span");
             taskText.className = "task-text";
             taskText.textContent = task;
+
+            const dateText = document.createElement("span");
+            dateText.className = "task-date";
+
+            const status = document.createElement("span");
+            status.className = "status";
+
+            function updateStatus() {
+                const date = listItem.dataset.date;
+                const isCompleted = listItem.dataset.completed === "true";
+
+                status.className = "status";
+
+                if (isCompleted) {
+                    status.textContent = "Completed";
+                    status.classList.add("completed");
+                } else if (!date) {
+                    status.textContent = "No date";
+                    status.classList.add("no-date");
+                } else if (date === getToday()) {
+                    status.textContent = "Today";
+                    status.classList.add("today");
+                } else if (date < getToday()) {
+                    status.textContent = "Overdue";
+                    status.classList.add("overdue");
+                } else {
+                    status.textContent = "Upcoming";
+                    status.classList.add("upcoming");
+                }
+
+                dateText.textContent = date ? "Due: " + date : "No date selected";
+            }
+
+            updateStatus();
 
             if (completed) {
                 taskText.style.textDecoration = "line-through";
                 taskText.style.opacity = "0.5";
             }
 
-            const dateText = document.createElement("span");
-            dateText.className = "task-date";
-            dateText.textContent = taskDate
-                ? "Due: " + taskDate
-                : "No date";
-
             const completeButton = document.createElement("button");
-            completeButton.textContent = "Complete";
+            completeButton.textContent = completed ? "Undo" : "Complete";
 
             completeButton.onclick = function() {
-                const isCompleted =
-                    taskText.style.textDecoration === "line-through";
+                const isCompleted = listItem.dataset.completed === "true";
+                listItem.dataset.completed = String(!isCompleted);
 
-                if (isCompleted) {
-                    taskText.style.textDecoration = "none";
-                    taskText.style.opacity = "1";
-                } else {
-                    taskText.style.textDecoration = "line-through";
-                    taskText.style.opacity = "0.5";
-                }
+                taskText.style.textDecoration = !isCompleted
+                    ? "line-through" : "none";
+                taskText.style.opacity = !isCompleted ? "0.5" : "1";
+                completeButton.textContent = !isCompleted ? "Undo" : "Complete";
 
+                updateStatus();
                 saveTasks();
+                updateTaskCount();
+                applyFilter();
             };
 
             const editButton = document.createElement("button");
             editButton.textContent = "Edit";
 
             editButton.onclick = function() {
-                const newTask = prompt(
-                    "Edit your task:",
-                    taskText.textContent
-                );
+                const newTask = prompt("Edit your task:", taskText.textContent);
 
                 if (newTask !== null && newTask.trim() !== "") {
                     taskText.textContent = newTask.trim();
+
+                    const newDate = prompt(
+                        "Enter a due date as YYYY-MM-DD, or leave blank for no date:",
+                        listItem.dataset.date
+                    );
+
+                    if (newDate !== null) {
+                        if (newDate === "" || /^\d{4}-\d{2}-\d{2}$/.test(newDate)) {
+                            listItem.dataset.date = newDate;
+                            updateStatus();
+                        } else {
+                            alert("Please use the date format YYYY-MM-DD.");
+                        }
+                    }
+
                     saveTasks();
+                    applyFilter();
                 }
             };
 
@@ -230,13 +328,19 @@
                 listItem.remove();
                 saveTasks();
                 updateTaskCount();
+                applyFilter();
             };
 
-            listItem.appendChild(taskText);
-            listItem.appendChild(dateText);
-            listItem.appendChild(completeButton);
-            listItem.appendChild(editButton);
-            listItem.appendChild(deleteButton);
+            listItem.append(
+                taskText,
+                dateText,
+                document.createElement("br"),
+                status,
+                document.createElement("br"),
+                completeButton,
+                editButton,
+                deleteButton
+            );
 
             document.getElementById("taskList").appendChild(listItem);
         }
@@ -244,21 +348,11 @@
         function saveTasks() {
             const tasks = [];
 
-            document.querySelectorAll("#taskList li").forEach(function(listItem) {
-                const taskText = listItem.querySelector(".task-text");
-                const dateText = listItem.querySelector(".task-date");
-
-                let taskDate = "";
-
-                if (dateText.textContent !== "No date") {
-                    taskDate = dateText.textContent.replace("Due: ", "");
-                }
-
+            document.querySelectorAll("#taskList li").forEach(function(item) {
                 tasks.push({
-                    text: taskText.textContent,
-                    date: taskDate,
-                    completed:
-                        taskText.style.textDecoration === "line-through"
+                    text: item.querySelector(".task-text").textContent,
+                    date: item.dataset.date || "",
+                    completed: item.dataset.completed === "true"
                 });
             });
 
@@ -266,26 +360,63 @@
         }
 
         function loadTasks() {
-            const savedTasks =
-                JSON.parse(localStorage.getItem("tasks")) || [];
+            let savedTasks = [];
+
+            try {
+                savedTasks = JSON.parse(localStorage.getItem("tasks")) || [];
+            } catch (error) {
+                savedTasks = [];
+            }
 
             savedTasks.forEach(function(task) {
-                createTask(
-                    task.text,
-                    task.date || "",
-                    task.completed
-                );
+                createTask(task.text, task.date || "", task.completed);
             });
 
             updateTaskCount();
+            applyFilter();
         }
 
         function updateTaskCount() {
-            const count =
-                document.querySelectorAll("#taskList li").length;
+            const tasks = Array.from(document.querySelectorAll("#taskList li"));
+            const activeTasks = tasks.filter(
+                task => task.dataset.completed !== "true"
+            ).length;
 
             document.getElementById("taskCount").textContent =
-                "Tasks: " + count;
+                `Tasks: ${tasks.length} | Remaining: ${activeTasks}`;
+        }
+
+        function setFilter(filter, button) {
+            currentFilter = filter;
+
+            document.querySelectorAll(".filter-button").forEach(function(item) {
+                item.classList.remove("active");
+            });
+
+            button.classList.add("active");
+            applyFilter();
+        }
+
+        function applyFilter() {
+            document.querySelectorAll("#taskList li").forEach(function(item) {
+                const date = item.dataset.date;
+                const completed = item.dataset.completed === "true";
+                let show = false;
+
+                if (currentFilter === "all") {
+                    show = true;
+                } else if (currentFilter === "completed") {
+                    show = completed;
+                } else if (currentFilter === "today") {
+                    show = !completed && date === getToday();
+                } else if (currentFilter === "upcoming") {
+                    show = !completed && date > getToday();
+                } else if (currentFilter === "overdue") {
+                    show = !completed && date !== "" && date < getToday();
+                }
+
+                item.style.display = show ? "" : "none";
+            });
         }
 
         function clearTasks() {
@@ -295,28 +426,25 @@
 
             document.getElementById("taskList").innerHTML = "";
             localStorage.removeItem("tasks");
+
             updateTaskCount();
+            applyFilter();
         }
 
         function toggleDarkMode() {
-            const isDark =
-                document.body.classList.toggle("dark-mode");
+            const isDark = document.body.classList.toggle("dark-mode");
 
-            const button = document.getElementById("darkModeButton");
+            document.getElementById("darkModeButton").textContent =
+                isDark ? "☀️ Light Mode" : "🌙 Dark Mode";
 
-            button.textContent = isDark
-                ? "☀️ Light Mode"
-                : "🌙 Dark Mode";
-
-            localStorage.setItem("darkMode", isDark);
+            localStorage.setItem("darkMode", String(isDark));
         }
 
         function loadDarkMode() {
-            const savedMode = localStorage.getItem("darkMode");
+            const isDark = localStorage.getItem("darkMode") === "true";
 
-            if (savedMode === "true") {
+            if (isDark) {
                 document.body.classList.add("dark-mode");
-
                 document.getElementById("darkModeButton").textContent =
                     "☀️ Light Mode";
             }
@@ -325,7 +453,6 @@
         loadDarkMode();
         loadTasks();
     </script>
-
 </body>
 </html>
 ```
