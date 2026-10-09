@@ -1,28 +1,35 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>JavaScript To-Do List</title>
+    <title>My To-Do List</title>
 
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             font-family: Arial, sans-serif;
             background: #f5f5f5;
+            color: #333;
             text-align: center;
-            padding: 50px;
+            padding: 30px 15px;
+            margin: 0;
+            transition: background 0.3s, color 0.3s;
         }
 
         h1 {
             color: #8b5e83;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
 
         input {
             padding: 12px;
-            width: 250px;
+            max-width: 100%;
             border: 1px solid #ccc;
             border-radius: 6px;
             font-size: 16px;
@@ -30,8 +37,8 @@
         }
 
         button {
-            padding: 10px 20px;
-            background: #333;
+            padding: 10px 15px;
+            background: #8b5e83;
             color: white;
             border: none;
             border-radius: 6px;
@@ -51,9 +58,10 @@
 
         li {
             background: white;
-            margin: 10px auto;
+            color: #333;
+            margin: 12px auto;
             padding: 15px;
-            max-width: 450px;
+            max-width: 500px;
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
@@ -62,6 +70,7 @@
             display: block;
             font-weight: bold;
             margin-bottom: 8px;
+            overflow-wrap: anywhere;
         }
 
         .task-date {
@@ -75,13 +84,59 @@
             font-weight: bold;
             color: #8b5e83;
         }
+
+        /* Dark Mode */
+        body.dark-mode {
+            background: #1e1e2f;
+            color: #f5f5f5;
+        }
+
+        body.dark-mode h1 {
+            color: #e6a8d7;
+        }
+
+        body.dark-mode li {
+            background: #303047;
+            color: #f5f5f5;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        body.dark-mode .task-date {
+            color: #d0c5d5;
+        }
+
+        body.dark-mode #taskCount {
+            color: #e6a8d7;
+        }
+
+        body.dark-mode input {
+            background: #303047;
+            color: white;
+            border-color: #666;
+        }
+
+        @media (max-width: 480px) {
+            input {
+                width: 100%;
+                max-width: 320px;
+            }
+
+            button {
+                padding: 10px 12px;
+            }
+        }
     </style>
 </head>
 
 <body>
 
     <h1>My To-Do List</h1>
-    <button onclick="toggleDarkMode()">🌙 Dark Mode</button>
+
+    <button id="darkModeButton" onclick="toggleDarkMode()">
+        🌙 Dark Mode
+    </button>
+
+    <br>
 
     <input type="text" id="taskInput" placeholder="Enter a task">
 
@@ -96,9 +151,7 @@
     <button onclick="clearTasks()">Clear All</button>
 
     <script>
-
         function addTask() {
-
             const input = document.getElementById("taskInput");
             const task = input.value.trim();
 
@@ -116,13 +169,10 @@
             dateInput.value = "";
 
             saveTasks();
-
             updateTaskCount();
         }
 
-
         function createTask(task, taskDate, completed) {
-
             const listItem = document.createElement("li");
 
             const taskText = document.createElement("span");
@@ -136,26 +186,21 @@
 
             const dateText = document.createElement("span");
             dateText.className = "task-date";
-
-            if (taskDate !== "") {
-                dateText.textContent = "Due: " + taskDate;
-            } else {
-                dateText.textContent = "No date";
-            }
-
+            dateText.textContent = taskDate
+                ? "Due: " + taskDate
+                : "No date";
 
             const completeButton = document.createElement("button");
             completeButton.textContent = "Complete";
 
             completeButton.onclick = function() {
+                const isCompleted =
+                    taskText.style.textDecoration === "line-through";
 
-                if (taskText.style.textDecoration === "line-through") {
-
+                if (isCompleted) {
                     taskText.style.textDecoration = "none";
                     taskText.style.opacity = "1";
-
                 } else {
-
                     taskText.style.textDecoration = "line-through";
                     taskText.style.opacity = "0.5";
                 }
@@ -163,38 +208,29 @@
                 saveTasks();
             };
 
-
             const editButton = document.createElement("button");
             editButton.textContent = "Edit";
 
             editButton.onclick = function() {
-
                 const newTask = prompt(
                     "Edit your task:",
                     taskText.textContent
                 );
 
                 if (newTask !== null && newTask.trim() !== "") {
-
                     taskText.textContent = newTask.trim();
-
                     saveTasks();
                 }
             };
-
 
             const deleteButton = document.createElement("button");
             deleteButton.textContent = "Delete";
 
             deleteButton.onclick = function() {
-
                 listItem.remove();
-
                 saveTasks();
-
                 updateTaskCount();
             };
-
 
             listItem.appendChild(taskText);
             listItem.appendChild(dateText);
@@ -205,13 +241,10 @@
             document.getElementById("taskList").appendChild(listItem);
         }
 
-
         function saveTasks() {
-
             const tasks = [];
 
             document.querySelectorAll("#taskList li").forEach(function(listItem) {
-
                 const taskText = listItem.querySelector(".task-text");
                 const dateText = listItem.querySelector(".task-date");
 
@@ -224,36 +257,30 @@
                 tasks.push({
                     text: taskText.textContent,
                     date: taskDate,
-                    completed: taskText.style.textDecoration === "line-through"
+                    completed:
+                        taskText.style.textDecoration === "line-through"
                 });
-
             });
 
             localStorage.setItem("tasks", JSON.stringify(tasks));
         }
 
-
         function loadTasks() {
-
             const savedTasks =
                 JSON.parse(localStorage.getItem("tasks")) || [];
 
             savedTasks.forEach(function(task) {
-
                 createTask(
                     task.text,
                     task.date || "",
                     task.completed
                 );
-
             });
 
             updateTaskCount();
         }
 
-
         function updateTaskCount() {
-
             const count =
                 document.querySelectorAll("#taskList li").length;
 
@@ -261,21 +288,44 @@
                 "Tasks: " + count;
         }
 
-
         function clearTasks() {
+            if (!confirm("Are you sure you want to delete all tasks?")) {
+                return;
+            }
 
             document.getElementById("taskList").innerHTML = "";
-
             localStorage.removeItem("tasks");
-
             updateTaskCount();
         }
 
+        function toggleDarkMode() {
+            const isDark =
+                document.body.classList.toggle("dark-mode");
 
+            const button = document.getElementById("darkModeButton");
+
+            button.textContent = isDark
+                ? "☀️ Light Mode"
+                : "🌙 Dark Mode";
+
+            localStorage.setItem("darkMode", isDark);
+        }
+
+        function loadDarkMode() {
+            const savedMode = localStorage.getItem("darkMode");
+
+            if (savedMode === "true") {
+                document.body.classList.add("dark-mode");
+
+                document.getElementById("darkModeButton").textContent =
+                    "☀️ Light Mode";
+            }
+        }
+
+        loadDarkMode();
         loadTasks();
-
     </script>
 
 </body>
-
 </html>
+```
