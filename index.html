@@ -23,8 +23,8 @@
         .container {
             max-width: 750px;
             margin: auto;
-            background: white;
             padding: 25px;
+            background: white;
             border-radius: 16px;
             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
         }
@@ -56,7 +56,6 @@
             border: none;
             border-radius: 8px;
             padding: 11px 14px;
-            transition: opacity 0.2s;
         }
 
         button:hover {
@@ -86,12 +85,12 @@
             color: #111827;
         }
 
-        #taskInput {
+        #taskInput,
+        #addTaskButton {
             grid-column: 1 / -1;
         }
 
         #addTaskButton {
-            grid-column: 1 / -1;
             background: #2563eb;
             color: white;
             font-weight: bold;
@@ -112,10 +111,6 @@
         .filter-button.active {
             background: #2563eb;
             color: white;
-        }
-
-        .summary {
-            margin-top: 15px;
         }
 
         #taskList {
@@ -149,6 +144,7 @@
             height: 18px;
             margin-top: 3px;
             cursor: pointer;
+            flex-shrink: 0;
         }
 
         .task-details {
@@ -157,8 +153,8 @@
         }
 
         .task-name {
-            font-weight: bold;
             display: block;
+            font-weight: bold;
             margin-bottom: 7px;
         }
 
@@ -218,6 +214,8 @@
             background: #dc2626;
         }
 
+        /* Progress bar */
+
         .progress-section {
             width: 100%;
             margin: 20px 0;
@@ -227,9 +225,9 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
             gap: 10px;
             margin-bottom: 8px;
-            flex-wrap: wrap;
         }
 
         #progressText {
@@ -267,7 +265,7 @@
             padding: 20px 5px;
         }
 
-        /* Dark Mode */
+        /* Dark mode */
 
         body.dark-mode {
             background: #111827;
@@ -301,6 +299,7 @@
 
         body.dark-mode .filter-button.active {
             background: #2563eb;
+            color: white;
         }
 
         body.dark-mode .progress-track {
@@ -356,8 +355,8 @@
                 type="text"
                 id="taskInput"
                 placeholder="Enter a new task..."
-                required
                 maxlength="250"
+                required
             >
 
             <select id="priorityInput" aria-label="Task priority">
@@ -372,28 +371,22 @@
                 aria-label="Task due date"
             >
 
-            <button id="addTaskButton" type="submit">
-                Add Task
-            </button>
+            <button id="addTaskButton" type="submit">Add Task</button>
         </form>
 
         <div class="filter-section">
             <button class="filter-button active" data-filter="all" type="button">
                 All Tasks
             </button>
-
             <button class="filter-button" data-filter="today" type="button">
                 Today
             </button>
-
             <button class="filter-button" data-filter="upcoming" type="button">
                 Upcoming
             </button>
-
             <button class="filter-button" data-filter="overdue" type="button">
                 Overdue
             </button>
-
             <button class="filter-button" data-filter="completed" type="button">
                 Completed
             </button>
@@ -404,18 +397,18 @@
 
             <div class="progress-section">
                 <div class="progress-info">
-                    <strong id="taskCount">Tasks: 0</strong>
+                    <strong id="taskCount">Tasks: 0 | Completed: 0</strong>
                     <span id="progressText">0% completed</span>
                 </div>
 
                 <div
                     class="progress-track"
+                    id="progressTrack"
                     role="progressbar"
                     aria-label="Task completion progress"
                     aria-valuemin="0"
                     aria-valuemax="100"
                     aria-valuenow="0"
-                    id="progressTrack"
                 >
                     <div id="progressBar" class="progress-bar"></div>
                 </div>
@@ -444,7 +437,7 @@
         let currentFilter = "all";
         let darkMode = localStorage.getItem("darkMode") === "true";
 
-        // Load saved tasks. Keep compatibility with previously saved tasks.
+        // Load previously saved tasks.
         function loadTasks() {
             try {
                 const savedTasks = JSON.parse(localStorage.getItem("tasks"));
@@ -465,7 +458,7 @@
                     }
 
                     return {
-                        id: task.id ?? (Date.now() + index),
+                        id: task.id ?? Date.now() + index,
                         text: task.text ?? task.name ?? "",
                         completed: Boolean(task.completed),
                         priority: ["High", "Medium", "Low"].includes(task.priority)
@@ -495,9 +488,7 @@
         }
 
         function formatDate(dateString) {
-            if (!dateString) {
-                return "";
-            }
+            if (!dateString) return "";
 
             const parts = dateString.split("-");
             return `${parts[2]}/${parts[1]}/${parts[0]}`;
@@ -539,11 +530,9 @@
             if (visibleTasks.length === 0) {
                 const emptyMessage = document.createElement("li");
                 emptyMessage.className = "empty-message";
-
                 emptyMessage.textContent = tasks.length === 0
                     ? "No tasks yet. Add your first task above!"
                     : "No tasks in this filter.";
-
                 taskList.appendChild(emptyMessage);
             }
 
@@ -615,18 +604,14 @@
                 editButton.addEventListener("click", () => {
                     const newText = prompt("Edit your task:", task.text);
 
-                    if (newText === null) {
-                        return;
-                    }
+                    if (newText === null) return;
 
-                    const trimmedText = newText.trim();
-
-                    if (trimmedText === "") {
+                    if (newText.trim() === "") {
                         alert("Task cannot be empty.");
                         return;
                     }
 
-                    task.text = trimmedText;
+                    task.text = newText.trim();
 
                     const newPriority = prompt(
                         "Priority: High, Medium, or Low",
@@ -634,8 +619,7 @@
                     );
 
                     if (newPriority !== null) {
-                        const normalizedPriority =
-                            newPriority.trim().toLowerCase();
+                        const normalizedPriority = newPriority.trim().toLowerCase();
 
                         if (["high", "medium", "low"].includes(normalizedPriority)) {
                             task.priority =
@@ -650,15 +634,12 @@
                     );
 
                     if (newDueDate !== null) {
-                        const trimmedDate = newDueDate.trim();
+                        const dateValue = newDueDate.trim();
 
-                        if (
-                            trimmedDate === "" ||
-                            /^\d{4}-\d{2}-\d{2}$/.test(trimmedDate)
-                        ) {
-                            task.dueDate = trimmedDate;
+                        if (dateValue === "" || /^\d{4}-\d{2}-\d{2}$/.test(dateValue)) {
+                            task.dueDate = dateValue;
                         } else {
-                            alert("The date was not changed. Use YYYY-MM-DD.");
+                            alert("Date unchanged. Use YYYY-MM-DD format.");
                         }
                     }
 
@@ -687,10 +668,8 @@
                 taskList.appendChild(item);
             });
 
-            // Update task count and progress bar.
-            const completedTasks = tasks.filter(
-                task => task.completed
-            ).length;
+            // Calculate and display overall progress.
+            const completedTasks = tasks.filter(task => task.completed).length;
 
             const percentage = tasks.length === 0
                 ? 0
@@ -705,7 +684,7 @@
             progressTrack.setAttribute("aria-valuenow", percentage);
         }
 
-        // Add a new task.
+        // Add tasks.
         taskForm.addEventListener("submit", event => {
             event.preventDefault();
 
@@ -774,7 +753,7 @@
             applyDarkMode();
         });
 
-        // Show saved tasks and settings when the page opens.
+        // Start the app.
         applyDarkMode();
         renderTasks();
     </script>
