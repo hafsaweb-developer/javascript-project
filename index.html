@@ -1,4 +1,4 @@
-```html
+html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,46 +16,60 @@
             background: #f3f4f6;
             color: #222;
             margin: 0;
-            padding: 30px 15px;
-            transition: background 0.3s, color 0.3s;
+            padding: 25px 12px;
+            transition: 0.3s;
         }
 
         .container {
             max-width: 850px;
             margin: auto;
             background: white;
-            padding: 25px;
+            padding: 24px;
             border-radius: 14px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
 
         h1 {
             text-align: center;
-            margin-top: 0;
         }
 
         .top-bar {
             display: flex;
             justify-content: flex-end;
-            margin-bottom: 20px;
+            margin-bottom: 18px;
         }
 
         input, select, button {
-            font: inherit;
             padding: 11px;
+            font: inherit;
             border-radius: 7px;
-            border: 1px solid #ccc;
         }
 
         input, select {
+            border: 1px solid #ccc;
             max-width: 100%;
+        }
+
+        button {
+            border: none;
+            background: #2563eb;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            opacity: 0.85;
+        }
+
+        .theme-button {
+            background: #374151;
         }
 
         .add-area {
             display: flex;
             flex-wrap: wrap;
             gap: 10px;
-            margin-bottom: 20px;
+            margin: 20px 0;
         }
 
         #taskInput {
@@ -66,22 +80,6 @@
         #taskDate, #taskPriority {
             flex: 1 1 150px;
             min-width: 0;
-        }
-
-        button {
-            border: none;
-            cursor: pointer;
-            background: #2563eb;
-            color: white;
-            transition: opacity 0.2s;
-        }
-
-        button:hover {
-            opacity: 0.85;
-        }
-
-        .theme-button {
-            background: #374151;
         }
 
         .filters {
@@ -104,7 +102,6 @@
         #taskList {
             list-style: none;
             padding: 0;
-            margin: 0;
         }
 
         .task-item {
@@ -116,17 +113,16 @@
             margin-bottom: 12px;
             border: 1px solid #e5e7eb;
             border-radius: 10px;
-            overflow-wrap: anywhere;
         }
 
         .task-info {
             flex: 1;
             min-width: 0;
+            overflow-wrap: anywhere;
         }
 
         .task-name {
             font-weight: bold;
-            font-size: 16px;
         }
 
         .task-meta {
@@ -191,8 +187,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            gap: 10px;
             flex-wrap: wrap;
+            gap: 10px;
             margin-top: 20px;
         }
 
@@ -201,8 +197,6 @@
             color: #6b7280;
             padding: 20px 5px;
         }
-
-        /* DARK MODE */
 
         body.dark-mode {
             background: #111827;
@@ -237,17 +231,9 @@
             background: #2563eb;
         }
 
-        body.dark-mode .empty-message {
-            color: #d1d5db;
-        }
-
         @media (max-width: 600px) {
-            body {
-                padding: 15px 8px;
-            }
-
             .container {
-                padding: 16px;
+                padding: 15px;
             }
 
             .task-item {
@@ -273,15 +259,17 @@
     <h1>My To-Do List</h1>
 
     <div class="top-bar">
-        <button class="theme-button" id="themeButton"
+        <button class="theme-button"
+                id="themeButton"
                 onclick="toggleDarkMode()">
             🌙 Dark Mode
         </button>
     </div>
 
-    <!-- ADD TASK AREA -->
+    <!-- ADD TASK AREA: ONLY ONE ADD TASK BUTTON -->
 
     <div class="add-area">
+
         <input
             type="text"
             id="taskInput"
@@ -301,11 +289,13 @@
         </select>
 
         <button onclick="addTask()">Add Task</button>
+
     </div>
 
     <!-- TASK FILTERS -->
 
     <div class="filters">
+
         <button class="filter-button active"
                 data-filter="all"
                 onclick="setFilter('all', this)">
@@ -335,6 +325,7 @@
                 onclick="setFilter('completed', this)">
             Completed
         </button>
+
     </div>
 
     <!-- TASK LIST -->
@@ -388,7 +379,7 @@
     }
 
 
-    // GET TODAY'S DATE IN LOCAL TIME
+    // GET TODAY'S DATE
 
     function getToday() {
         const today = new Date();
@@ -436,7 +427,7 @@
     }
 
 
-    // COMPLETE OR UNCOMPLETE A TASK
+    // COMPLETE TASK
 
     function toggleComplete(id) {
         const task = tasks.find(task => task.id === id);
@@ -473,8 +464,10 @@
 
         if (newDate === null) return;
 
-        if (newDate.trim() !== "" &&
-            !/^\d{4}-\d{2}-\d{2}$/.test(newDate.trim())) {
+        if (
+            newDate.trim() !== "" &&
+            !/^\d{4}-\d{2}-\d{2}$/.test(newDate.trim())
+        ) {
             alert("Please use the date format YYYY-MM-DD.");
             return;
         }
@@ -486,29 +479,29 @@
 
         if (newPriority === null) return;
 
-        const priority = newPriority.trim().toLowerCase();
-
         const priorityMap = {
             high: "High",
             medium: "Medium",
             low: "Low"
         };
 
-        if (!priorityMap[priority]) {
+        const priority = priorityMap[newPriority.trim().toLowerCase()];
+
+        if (!priority) {
             alert("Please enter High, Medium, or Low.");
             return;
         }
 
         task.text = newText.trim();
         task.date = newDate.trim();
-        task.priority = priorityMap[priority];
+        task.priority = priority;
 
         saveTasks();
         renderTasks();
     }
 
 
-    // DELETE ONE TASK
+    // DELETE TASK
 
     function deleteTask(id) {
         if (!confirm("Are you sure you want to delete this task?")) {
@@ -556,7 +549,7 @@
     }
 
 
-    // CHECK WHICH TASKS SHOULD BE DISPLAYED
+    // CHECK FILTER
 
     function matchesFilter(task) {
         const today = getToday();
@@ -608,7 +601,6 @@
 
         visibleTasks.forEach(task => {
             const li = document.createElement("li");
-
             li.className = "task-item";
 
             if (task.completed) {
@@ -686,16 +678,15 @@
     }
 
 
-    // UPDATE DARK MODE BUTTON TEXT
+    // UPDATE THEME BUTTON
 
     function updateThemeButton() {
         const button = document.getElementById("themeButton");
 
-        if (document.body.classList.contains("dark-mode")) {
-            button.textContent = "☀️ Light Mode";
-        } else {
-            button.textContent = "🌙 Dark Mode";
-        }
+        button.textContent =
+            document.body.classList.contains("dark-mode")
+                ? "☀️ Light Mode"
+                : "🌙 Dark Mode";
     }
 
 
@@ -708,7 +699,7 @@
     updateThemeButton();
 
 
-    // ALLOW ENTER KEY TO ADD TASK
+    // PRESS ENTER TO ADD A TASK
 
     document.getElementById("taskInput").addEventListener(
         "keydown",
@@ -720,11 +711,10 @@
     );
 
 
-    // SHOW SAVED TASKS WHEN PAGE OPENS
+    // SHOW TASKS
 
     renderTasks();
 </script>
 
 </body>
 </html>
-```
