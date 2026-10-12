@@ -96,39 +96,30 @@
             font-weight: bold;
         }
 
+        /* Search box */
+
+        .search-section {
+            margin-bottom: 15px;
+        }
+
+        #searchInput {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 15px;
+            background: white;
+            color: #1f2937;
+            outline: none;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        #searchInput:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        }
+
         .filter-section {
-            
-.search-section {
-    margin-bottom: 15px;
-}
-
-#searchInput {
-    width: 100%;
-    padding: 12px 15px;
-    border: 1px solid #d1d5db;
-    border-radius: 8px;
-    font-size: 15px;
-    background: white;
-    color: #1f2937;
-    outline: none;
-    transition: border-color 0.3s, box-shadow 0.3s;
-}
-
-#searchInput:focus {
-    border-color: #2563eb;
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
-}
-
-body.dark-mode #searchInput {
-    background: #374151;
-    color: white;
-    border-color: #4b5563;
-}
-
-body.dark-mode #searchInput::placeholder {
-    color: #d1d5db;
-}
-
             display: flex;
             flex-wrap: wrap;
             gap: 8px;
@@ -318,10 +309,15 @@ body.dark-mode #searchInput::placeholder {
         }
 
         body.dark-mode .task-form input,
-        body.dark-mode .task-form select {
+        body.dark-mode .task-form select,
+        body.dark-mode #searchInput {
             background: #374151;
             color: white;
             border-color: #4b5563;
+        }
+
+        body.dark-mode #searchInput::placeholder {
+            color: #d1d5db;
         }
 
         body.dark-mode .filter-button {
@@ -405,14 +401,16 @@ body.dark-mode #searchInput::placeholder {
 
             <button id="addTaskButton" type="submit">Add Task</button>
         </form>
-<div class="search-section">
-    <input
-        type="text"
-        id="searchInput"
-        placeholder="🔍 Search your tasks..."
-        aria-label="Search your tasks"
-    >
-</div>
+
+        <div class="search-section">
+            <input
+                type="text"
+                id="searchInput"
+                placeholder="🔍 Search your tasks..."
+                aria-label="Search your tasks"
+            >
+        </div>
+
         <div class="filter-section">
             <button class="filter-button active" data-filter="all" type="button">
                 All Tasks
@@ -477,7 +475,7 @@ body.dark-mode #searchInput::placeholder {
         let currentFilter = "all";
         let darkMode = localStorage.getItem("darkMode") === "true";
 
-        // Load previously saved tasks.
+        // Load saved tasks.
         function loadTasks() {
             try {
                 const savedTasks = JSON.parse(localStorage.getItem("tasks"));
@@ -536,8 +534,17 @@ body.dark-mode #searchInput::placeholder {
 
         function getVisibleTasks() {
             const today = getToday();
+            const searchTerm = searchInput.value.trim().toLowerCase();
 
             return tasks.filter(task => {
+                const matchesSearch = task.text
+                    .toLowerCase()
+                    .includes(searchTerm);
+
+                if (!matchesSearch) {
+                    return false;
+                }
+
                 if (currentFilter === "completed") {
                     return task.completed;
                 }
@@ -572,7 +579,7 @@ body.dark-mode #searchInput::placeholder {
                 emptyMessage.className = "empty-message";
                 emptyMessage.textContent = tasks.length === 0
                     ? "No tasks yet. Add your first task above!"
-                    : "No tasks in this filter.";
+                    : "No matching tasks found.";
                 taskList.appendChild(emptyMessage);
             }
 
@@ -629,7 +636,6 @@ body.dark-mode #searchInput::placeholder {
 
                 details.appendChild(taskName);
                 details.appendChild(meta);
-
                 main.appendChild(checkbox);
                 main.appendChild(details);
 
@@ -702,13 +708,12 @@ body.dark-mode #searchInput::placeholder {
 
                 actions.appendChild(editButton);
                 actions.appendChild(deleteButton);
-
                 item.appendChild(main);
                 item.appendChild(actions);
                 taskList.appendChild(item);
             });
 
-            // Calculate and display overall progress.
+            // Update the overall task progress.
             const completedTasks = tasks.filter(task => task.completed).length;
 
             const percentage = tasks.length === 0
@@ -724,7 +729,7 @@ body.dark-mode #searchInput::placeholder {
             progressTrack.setAttribute("aria-valuenow", percentage);
         }
 
-        // Add tasks.
+        // Add a task.
         taskForm.addEventListener("submit", event => {
             event.preventDefault();
 
@@ -749,6 +754,9 @@ body.dark-mode #searchInput::placeholder {
             renderTasks();
             taskInput.focus();
         });
+
+        // Search tasks as you type.
+        searchInput.addEventListener("input", renderTasks);
 
         // Filter tasks.
         filterButtons.forEach(button => {
