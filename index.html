@@ -651,6 +651,14 @@ document.getElementById("pendingTasksStat").textContent = pendingTasks;
                 "Tasks: " + tasks.length +
                 " | Completed: " + completedTasks;
 
+document.getElementById("totalTasksStat").textContent = tasks.length;
+
+document.getElementById("completedTasksStat").textContent =
+    tasks.filter(task => task.completed).length;
+
+document.getElementById("pendingTasksStat").textContent =
+    tasks.filter(task => !task.completed).length;
+
             progressText.textContent = percentage + "% completed";
             progressBar.style.width = percentage + "%";
             progressTrack.setAttribute("aria-valuenow", percentage);
