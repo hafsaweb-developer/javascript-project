@@ -635,6 +635,12 @@
                 taskList.appendChild(taskElement);
             });
 
+const pendingTasks = tasks.length - completedTasks;
+
+document.getElementById("totalTasksStat").textContent = tasks.length;
+document.getElementById("completedTasksStat").textContent = completedTasks;
+document.getElementById("pendingTasksStat").textContent = pendingTasks;
+
             // Progress always counts all tasks, not just search results.
             const completedTasks = tasks.filter(task => task.completed).length;
             const percentage = tasks.length === 0
